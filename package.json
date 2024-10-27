@@ -1,0 +1,24 @@
+{
+  "name": "part-8",
+  "version": "1.0.0",
+  "description": "fullstack open part-8 solutions",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamzaomer11/Part-8.git"
+  },
+  "author": "Hamza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hamzaomer11/Part-8/issues"
+  },
+  "homepage": "https://github.com/hamzaomer11/Part-8#readme",
+  "dependencies": {
+    "@apollo/server": "^4.11.0",
+    "graphql": "^16.9.0"
+  }
+}
