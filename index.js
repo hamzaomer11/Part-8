@@ -90,6 +90,7 @@ const typeDefs = `
     
   type Author { 
     name: String!
+    born: Int
     bookCount: Int!
   }
 
@@ -97,7 +98,7 @@ const typeDefs = `
     authorCount: Int!
     bookCount: Int!
     allBooks(author: String, genre: String): [Book!]!
-    allAuthors: [Author!]
+    allAuthors: [Author!]!
   }
 `
 
@@ -106,24 +107,26 @@ const resolvers = {
     authorCount: () => authors.length,
     bookCount: () => books.length,
     allBooks: (root, args) => {
-      if(args.author) {
-        return books.filter(b => b.author === args.author)
+      let booksFiltered = books;
+
+      if (args.author) {
+        booksFiltered = booksFiltered.filter(book => book.author === args.author);
       } else if (args.genre) {
-        return books.filter(b => b.genres.includes(args.genre))
-      } 
-      return books
+        booksFiltered = booksFiltered.filter(book => book.genres.includes(args.genre));
+      }
+      return booksFiltered;
     },
-    allAuthors: () => authors
+    allAuthors: () => authors,
   },
   Author: {
     bookCount: (root) => {
-      const booksByAuthor = books.filter((book) => book.author === root.name)
-      return booksByAuthor.length
-    }
-  }
+      const booksByAuthor = books.filter((book) => book.author === root.name);
+      return booksByAuthor.length;
+    },
+  },
 }
 
-console.log(books.filter(b => b.genres.includes("refactoring")))
+console.log(books.filter(b => b.author === "Fyodor Dostoevsky" && b.genres.includes("classic")))
 
 const server = new ApolloServer({
   typeDefs,
