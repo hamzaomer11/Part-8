@@ -127,8 +127,6 @@ const resolvers = {
   },
 }
 
-console.log(books.filter(b => b.author === "Fyodor Dostoevsky" && b.genres.includes("classic")))
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
