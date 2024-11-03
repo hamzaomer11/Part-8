@@ -1,27 +1,31 @@
 import { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/client'
+import Select from 'react-select'
+import { useMutation, useQuery } from '@apollo/client'
 import { ALL_AUTHORS, EDIT_BIRTHYEAR } from '../../queries'
 
-const BornForm = ({ setError }) => {
-  const [name, setName] = useState('')
+const BornForm = () => {
   const [born, setBorn] = useState('')
+  const [selectedOption, setSelectedOption] = useState([])
+
+  const authorData = useQuery(ALL_AUTHORS)
 
   const [changeBirthYear, result ] = useMutation(EDIT_BIRTHYEAR, {
     refetchQueries: [ {query: ALL_AUTHORS} ]
     })
 
   useEffect(() => {
-    if (result.data && result.data.editAuthor === null) {
-      setError('author not found')
+    if (authorData) {
+      const options = authorData.data.allAuthors.map(author => {
+        return { value: author.name, label: author.name }
+      })
+      setSelectedOption(options)
     }
   }, [result.data])
 
   const submit = async (event) => {
     event.preventDefault()
 
-    changeBirthYear({ variables: { name, born } })
-
-    setName('')
+    changeBirthYear({ variables: { name: event.target.author.value, born } })
     setBorn('')
   }
 
@@ -31,11 +35,11 @@ const BornForm = ({ setError }) => {
 
       <form onSubmit={submit}>
         <div>
-          name 
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
+          <Select
+            options={selectedOption}
+            name='author'
+          >
+          </Select>
         </div>
         <div>
           born 

@@ -2,14 +2,7 @@ import BornForm from "./BornForm"
 import { useQuery } from "@apollo/client"
 import { ALL_AUTHORS } from "../../queries"
 
-const Authors = ({setErrorMessage}) => {
-
-  const notify = (message) => {
-    setErrorMessage(message)
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 10000)
-  }
+const Authors = () => {
 
   const result = useQuery(ALL_AUTHORS)
 
@@ -37,7 +30,7 @@ const Authors = ({setErrorMessage}) => {
         </tbody>
       </table>
       <div>
-        <BornForm setError={notify}/>
+        <BornForm/>
       </div>
     </div>
   )
