@@ -35,3 +35,12 @@ export const ALL_AUTHORS = gql`
     }
   }
 `
+
+export const EDIT_BIRTHYEAR = gql`
+  mutation editAuthor($name: String!, $born: String) {
+    editAuthor(name: $name, born: $born) {
+      name
+      born
+    }
+  }
+`

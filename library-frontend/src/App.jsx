@@ -35,7 +35,7 @@ const App = () => {
         </div>
 
         <Routes>
-          <Route path="/" element={<Authors />} />
+          <Route path="/" element={<Authors setErrorMessage={setErrorMessage}/>} />
           <Route path="/books" element={<Books />} />
           <Route path="/add-book" element={<NewBook setError={notify}/>} />
         </Routes>
