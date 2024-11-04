@@ -44,8 +44,9 @@ const BornForm = () => {
         <div>
           born 
           <input
+            type='number'
             value={born}
-            onChange={({ target }) => setBorn(target.value)}
+            onChange={({ target }) => setBorn(Number(target.value))}
           />
         </div>
         <button type='submit'>update author</button>
