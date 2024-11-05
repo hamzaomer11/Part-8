@@ -139,10 +139,10 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    authorCount: async () => Author.collection.countDocuments(),
-    bookCount: async () => Book.collection.countDocuments(),
-    allBooks: async (root, args) => {
-      let booksFiltered = Book.find({});
+    authorCount: () => authors.length,
+    bookCount: () => books.length,
+    allBooks: (root, args) => {
+      let booksFiltered = books
 
       if (args.author) {
         booksFiltered = booksFiltered.filter(book => book.author === args.author);
@@ -152,7 +152,7 @@ const resolvers = {
       }
       return booksFiltered;
     },
-    allAuthors: async () => Author.find({}),
+    allAuthors: () => authors,
   },
   Author: {
     bookCount: (root) => {
@@ -164,8 +164,8 @@ const resolvers = {
     author: (root) => {
       return {
         name: root.author,
-        born: Author.find({}).find((author) => author.name === root.author).born,
-        bookCount: Book.find({}).filter((book) => book.author === root.author).length,
+        born: authors.find((author) => author.name === root.author).born,
+        bookCount: books.filter((book) => book.author === root.author).length,
       }
     }
   },
