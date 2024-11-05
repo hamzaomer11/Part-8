@@ -179,10 +179,10 @@ const resolvers = {
       }
 
       const book = new Book({
-        title,
+        title: args.title,
         author: authorInDb._id,
-        published,
-        genres
+        published: args.published,
+        genres: args.genres
       })
 
       await book.save()
