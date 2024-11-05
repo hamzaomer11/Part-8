@@ -164,8 +164,8 @@ const resolvers = {
     author: (root) => {
       return {
         name: root.author,
-        born: authors.find((author) => author.name === root.author).born,
-        bookCount: books.filter((book) => book.author === root.author).length,
+        born: Author.find({}).find((author) => author.name === root.author).born,
+        bookCount: Book.find({}).filter((book) => book.author === root.author).length,
       }
     }
   },
