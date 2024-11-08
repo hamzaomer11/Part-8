@@ -139,20 +139,26 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    authorCount: () => authors.length,
-    bookCount: () => books.length,
-    allBooks: (root, args) => {
-      let booksFiltered = books
+    authorCount: async () => Author.collection.countDocuments(),
+    bookCount: async () => Book.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      let booksFiltered = Book.find({})
 
       if (args.author) {
-        booksFiltered = booksFiltered.filter(book => book.author === args.author);
+        const authorFound = await Author.findOne({name: args.author})
+        if (authorFound) {
+          return Book.find({author: authorFound._id})
+        }
+        return []
       }
+
       if (args.genre) {
-        booksFiltered = booksFiltered.filter(book => book.genres.includes(args.genre));
+        const genreFound = await Book.find({genres: args.genre})
+        return genreFound
       }
-      return booksFiltered;
+      return booksFiltered
     },
-    allAuthors: () => authors,
+    allAuthors: async () => Author.find({}),
   },
   Author: {
     bookCount: (root) => {
@@ -164,7 +170,7 @@ const resolvers = {
     author: (root) => {
       return {
         name: root.author,
-        born: Author.find({}).find((author) => author.name === root.author).born,
+        born: Author.find({}).then((author) => author.name === root.author).born,
         bookCount: Book.find({}).filter((book) => book.author === root.author).length,
       }
     }
@@ -189,15 +195,15 @@ const resolvers = {
 
       return book.populate('author')
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
-      if (!author) {
+    editAuthor: async (root, args) => {
+      let authorFound = await Author.findOne({name: args.name})
+      if (!authorFound) {
         return null
       }
-  
-      const updatedAuthor = { ...author, born: args.born }
-      authors = authors.map(author => author.name === args.name ? updatedAuthor : author)
-      return updatedAuthor
+
+      authorFound.born = args.born
+      await authorFound.save()
+      return authorFound
     }
   }
 }
