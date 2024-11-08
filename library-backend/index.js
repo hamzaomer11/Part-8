@@ -177,7 +177,17 @@ const resolvers = {
       
       if (!authorInDb) {
         authorInDb = new Author({name: args.author})
-        await authorInDb.save()
+        try {
+          await authorInDb.save()
+        } catch (error) {
+          throw new GraphQLError(error.message, {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.author,
+              error
+            }
+          })
+        }
       }
 
       const book = new Book({
