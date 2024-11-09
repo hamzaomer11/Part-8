@@ -1,7 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
-
-const { v1: uuid } = require('uuid')
+const { GraphQLError } = require('graphql')
 
 let authors = [
   {
@@ -173,21 +172,12 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      let authorInDb = await Author.findOne({name: args.author})
+      try {
+        let authorInDb = await Author.findOne({name: args.author})
       
       if (!authorInDb) {
         authorInDb = new Author({name: args.author})
-        try {
-          await authorInDb.save()
-        } catch (error) {
-          throw new GraphQLError(error.message, {
-            extensions: {
-              code: 'BAD_USER_INPUT',
-              invalidArgs: args.author,
-              error
-            }
-          })
-        }
+        await authorInDb.save()
       }
 
       const book = new Book({
@@ -200,6 +190,15 @@ const resolvers = {
       await book.save()
 
       return book.populate('author')
+      } catch (error) {
+        throw new GraphQLError(error.message, {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args,
+            error
+          }
+        })
+      }
     },
     editAuthor: async (root, args) => {
       let authorFound = await Author.findOne({name: args.name})
