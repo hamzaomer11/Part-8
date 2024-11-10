@@ -84,6 +84,7 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const Book = require('./models/Book')
 const Author = require('./models/Author')
+const User = require('./models/User')
 
 require('dotenv').config()
 
@@ -115,6 +116,16 @@ const typeDefs = `
     bookCount: Int!
   }
 
+  type User {
+    username: String!
+    friends: [Person!]!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Mutation {
     addBook(
       title: String!
@@ -125,7 +136,14 @@ const typeDefs = `
     editAuthor(
       name: String!
       born: Int!
-  ): Author
+    ): Author
+    createUser(
+      username: String!
+    ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 
   type Query {
@@ -133,6 +151,7 @@ const typeDefs = `
     bookCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    me: user
   }
 `
 
