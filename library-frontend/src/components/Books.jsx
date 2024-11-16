@@ -12,6 +12,9 @@ const Books = () => {
     return <div>loading...</div>
   }
 
+  const allGenres = result.data.allBooks.flatMap(book => book.genres);
+  const genres = ["All", ...new Set(allGenres)];
+
   const filteredBooks = selectedGenre === "All"
     ? result.data.allBooks
     : result.data.allBooks.filter(books => 
@@ -44,16 +47,14 @@ const Books = () => {
         )}
       </div>
       <div>
-        {result.data.allBooks.map(books => (
-          books.genres.map((genre) => (
+        {genres.map((genre) => (
             <button
             key={genre}
             onClick={() => setSelectedGenre(genre)}
           >
             {genre}
           </button>
-          ))
-        ))}
+          ))}
       </div>
     </div>
   )
