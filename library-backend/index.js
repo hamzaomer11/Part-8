@@ -41,7 +41,7 @@ const typeDefs = `
 
   type User {
     username: String!
-    favoriteGenre: String!
+    favouriteGenre: String!
     id: ID!
   }
 
@@ -177,7 +177,14 @@ const resolvers = {
       return authorFound
     },
     createUser: async (root, args) => {
-      const user = new User({ username: args.username })
+      if (!args.username || !args.favouriteGenre) {
+        throw new UserInputError('missing username and/or favouriteGenre!', {
+          invalidArgs: args,
+        })
+      }
+
+      const user = new User({ username: args.username,
+        favouriteGenre: args.favouriteGenre })
   
       return user.save()
         .catch(error => {
