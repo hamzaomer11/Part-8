@@ -3,6 +3,7 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
+import Recommend from "./components/Recommend";
 
 import {
   BrowserRouter as Router,
@@ -58,12 +59,14 @@ const App = () => {
           <Link style={padding} to="/">authors</Link>
           <Link style={padding} to="/books">books</Link>
           <Link style={padding} to="/add-book">add</Link>
+          <Link style={padding} to="/recommend">recommend</Link>
           <Link style={padding} onClick={logout}>logout</Link>
         </div>
         <Routes>
           <Route path="/" element={<Authors setErrorMessage={setErrorMessage}/>} />
           <Route path="/books" element={<Books />} />
           <Route path="/add-book" element={<NewBook setError={notify}/>} />
+          <Route path="/recommend" element={<Recommend />}/>
         </Routes>
       </Router>
     </div>
