@@ -62,7 +62,7 @@ const typeDefs = `
     ): Author
     createUser(
       username: String!
-      favoriteGenre: String!
+      favouriteGenre: String!
     ): User
     login(
       username: String!
@@ -178,7 +178,7 @@ const resolvers = {
     },
     createUser: async (root, args) => {
       if (!args.username || !args.favouriteGenre) {
-        throw new UserInputError('missing username and/or favouriteGenre!', {
+        throw new GraphQLError('missing username and/or favouriteGenre!', {
           invalidArgs: args,
         })
       }
@@ -191,7 +191,7 @@ const resolvers = {
           throw new GraphQLError('Creating the user failed', {
             extensions: {
               code: 'BAD_USER_INPUT',
-              invalidArgs: args.username,
+              invalidArgs: args,
               error
             }
           })

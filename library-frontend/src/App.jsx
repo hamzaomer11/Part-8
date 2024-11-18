@@ -39,7 +39,7 @@ const App = () => {
   const logout = () => {
     setToken(null)
     localStorage.clear()
-    client.resetStore()
+    client.clearStore()
   }
 
   if (!token) {
@@ -60,7 +60,9 @@ const App = () => {
           <Link style={padding} to="/books">books</Link>
           <Link style={padding} to="/add-book">add</Link>
           <Link style={padding} to="/recommend">recommend</Link>
-          <Link style={padding} onClick={logout}>logout</Link>
+          {token && (
+            <Link style={padding} onClick={logout}>logout</Link>
+          )}
         </div>
         <Routes>
           <Route path="/" element={<Authors setErrorMessage={setErrorMessage}/>} />
