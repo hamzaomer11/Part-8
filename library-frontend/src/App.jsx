@@ -6,7 +6,6 @@ import LoginForm from "./components/LoginForm";
 import Recommend from "./components/Recommend";
 
 import {
-  BrowserRouter as Router,
   Routes, Route, Link, useNavigate
 } from 'react-router-dom'
 
@@ -60,16 +59,16 @@ const App = () => {
         <Link style={padding} to="/">authors</Link>
         <Link style={padding} to="/books">books</Link>
         <Link style={padding} to="/add-book">add</Link>
-       <Link style={padding} to="/recommend">recommend</Link>
+        <Link style={padding} to="/recommend">recommend</Link>
         {token && (
           <Link style={padding} onClick={logout}>logout</Link>
         )}
       </div>
       <Routes>
-        <Route path="/" element={<Authors setErrorMessage={setErrorMessage}/>} />
+        <Route path="/" element={<Authors setErrorMessage={setErrorMessage} />} />
         <Route path="/books" element={<Books />} />
-        <Route path="/add-book" element={<NewBook setError={notify}/>} />
-        <Route path="/recommend" element={<Recommend />}/>
+        <Route path="/add-book" element={<NewBook setError={notify} />} />
+        <Route path="/recommend" element={<Recommend />} />
         <Route path="/login-form" element={<LoginForm setToken={setToken} setError={notify} />} />
       </Routes>
     </div>
@@ -78,13 +77,13 @@ const App = () => {
 
 export default App;
 
-const Notify = ({errorMessage}) => {
-  if ( !errorMessage ) {
+const Notify = ({ errorMessage }) => {
+  if (!errorMessage) {
     return null
   }
   return (
-    <div style={{color: 'red'}}>
-    {errorMessage}
+    <div style={{ color: 'red' }}>
+      {errorMessage}
     </div>
   )
 }
