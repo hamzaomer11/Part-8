@@ -13,7 +13,7 @@ const Books = () => {
     return <div>loading...</div>
   }
 
-  const allGenres = result?.data?.allBooks.flatMap(book => book.genres);
+  const allGenres = result.data.allBooks.flatMap(book => book.genres);
   const genres = [...new Set(allGenres)];
 
   return (
@@ -29,7 +29,7 @@ const Books = () => {
                   <th>author</th>
                   <th>published</th>
                 </tr>
-                {result?.data?.allBooks.map((b) => (
+                {result.data.allBooks.map((b) => (
                   <tr key={b.title}>
                     <td>{b.title}</td>
                     <td>{b.author.name}</td>
