@@ -8,7 +8,6 @@ const Books = () => {
   const result = useQuery(ALL_BOOKS, {
     variables: {genre: selectedGenre},
   })
-  console.log(result)
 
   if (result.loading) {
     return <div>loading...</div>
