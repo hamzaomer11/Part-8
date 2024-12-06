@@ -9,7 +9,29 @@ import {
   Routes, Route, Link, useNavigate
 } from 'react-router-dom'
 
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useSubscription } from "@apollo/client";
+import { ALL_BOOKS, BOOK_ADDED } from "../queries";
+
+export const updateCache = (cache, query, addedBook) => {
+  const uniqByTitle = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.title
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+
+  const dataInStore = cache.readQuery(query);
+  const allBooks = dataInStore ? dataInStore.allBooks : [];
+
+  console.log('Updating cache with:', addedBook);
+  cache.updateQuery(query, () => {
+    console.log('Current allBooks:', allBooks)
+    return {
+      allBooks: uniqByTitle(allBooks.concat(addedBook)),
+    }
+  })
+}
 
 const App = () => {
 
@@ -21,6 +43,14 @@ const App = () => {
   const padding = {
     padding: 5
   }
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded
+      notify(`The book "${addedBook.title}" by ${addedBook.author.name} has been added!`)
+      updateCache(client.cache, { query: ALL_BOOKS, variables: {genre: ""} }, addedBook)
+    }
+  })
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('library-user-token')
