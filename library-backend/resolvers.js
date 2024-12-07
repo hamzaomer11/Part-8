@@ -4,6 +4,8 @@ const Book = require('./models/Book')
 const Author = require('./models/Author')
 const User = require('./models/User')
 
+const DataLoader = require('dataloader')
+
 const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
 
@@ -28,15 +30,17 @@ const resolvers = {
         }
         return booksFiltered
       },
-      allAuthors: async () => Author.find({}),
+      allAuthors: async () => {
+        console.log('All Author')
+        return Author.find({})
+      },
       me: (root, args, context) => {
         return context.currentUser
       },
     },
     Author: {
-      bookCount: async (root) => {
-        const booksByAuthor = await Book.countDocuments({author: root._id})
-        return booksByAuthor
+      bookCount: async (root, args, context) => {
+        return context.bookCountLoader.load(root._id)
       }
     },
     Book: {
@@ -153,4 +157,18 @@ const resolvers = {
     }
 }
 
-module.exports = resolvers
+const bookCountLoader = new DataLoader(async (authorIds) => {
+  const books = await Book.aggregate([
+    { $match: { author: { $in: authorIds } } },
+    { $group: { _id: '$author', count: { $sum: 1 } } },
+  ])
+
+  const bookCountMap = {}
+  books.forEach((book) => {
+    bookCountMap[book._id] = book.count
+  })
+
+  return authorIds.map((id) => bookCountMap[id] || 0)
+})
+
+module.exports = {resolvers, bookCountLoader}
